@@ -52,5 +52,34 @@ create or replace trigger update_qoh
 	 --- dbms_output.put_line("trigger worked")
 	 insert into logs values(log#_seq.nextval, USER, 'update', Sysdate, 'products', :new.pid);
   end;
-  /
-  show errors
+ /
+ show errors
+
+
+
+ create or replace trigger trig_pur#
+ before insert on purchases
+ for each row
+
+ begin
+ select pur#_seq.NEXTVAL
+ into :new.pur#
+ from dual;
+
+ end;
+/
+show errors
+
+
+ create or replace trigger trig_log#
+ before insert on logs
+ for each row
+
+ begin
+ select log#_seq.NEXTVAL
+ into :new.log#
+ from dual;
+
+ end;
+/
+show errors

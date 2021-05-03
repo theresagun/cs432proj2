@@ -2,37 +2,37 @@
 set serveroutput on
 /* ABBY 1-5 */
 /* Q1 */
-create sequence pur#_seq
-start with 100001
-increment by 1;
-
-create or replace trigger trig_pur#
-before insert on purchases
-for each row
-
-begin
-select pur#_seq.NEXTVAL
-into :new.pur#
-from dual;
-
-end;
-
-/
-
-create sequence log#_seq
-start with 1001
-increment by 1;
-
-create or replace trigger trig_log#
-before insert on logs
-for each row
-
-begin
-select log#_seq.NEXTVAL
-into :new.log#
-from dual;
-
-end;
+-- create sequence pur#_seq
+-- start with 100001
+-- increment by 1;
+--
+-- create or replace trigger trig_pur#
+-- before insert on purchases
+-- for each row
+--
+-- begin
+-- select pur#_seq.NEXTVAL
+-- into :new.pur#
+-- from dual;
+--
+-- end;
+--
+-- /
+--
+-- create sequence log#_seq
+-- start with 1001
+-- increment by 1;
+--
+-- create or replace trigger trig_log#
+-- before insert on logs
+-- for each row
+--
+-- begin
+-- select log#_seq.NEXTVAL
+-- into :new.log#
+-- from dual;
+--
+-- end;
 
 /* Q2 */
 create or replace procedure show_employees(eid NUMBER) is
@@ -86,6 +86,7 @@ end;
 show errors
 
 /* Q3 */
+
 create or replace procedure purchases_made(
         cust_id in customers.cid%type,
         p_id out purchases.pid%type,
@@ -99,21 +100,35 @@ create or replace procedure purchases_made(
                 from purchases where cid = cust_id;
                 status := true;
         exception
-                when no_data_found then status := false;
+                when no_data_found then
+				status := false;
+ 				raise_application_error(-20000, 'CID is invalid. No customers with cid ' || cust_id ||  ' exist');
 end;
 /
 show errors
+
+
 
 /* Q4 */
 create or replace function number_customers(
         p_id in purchases.pid%type)
         return number is
         same_pid number;
+		num_products_with_pid number;
+		invalid_pid exception;
         begin
                 select count(*) into same_pid
                 from purchases, customers where purchases.pid = p_id
                 and purchases.cid = customers.cid;
+				select count(*) into num_products_with_pid from products where pid = p_id;
+				if num_products_with_pid = 0 then
+					raise invalid_pid;
+				end if;
                 return (same_pid);
+		exception
+			when invalid_pid then
+				raise_application_error(-20000, 'PID is invalid. No product with pid ' || p_id ||  ' exist');
+
 end;
 /
 show errors
@@ -135,10 +150,10 @@ show errors
 
 /*question 6*/
 create or replace procedure add_purchase(
-	e_id in Purchases.eid%type, 
-	p_id in Purchases.pid%type, 
-	c_id in Purchases.cid%type, 
-	pur_qty in Purchases.qty%type, 
+	e_id in Purchases.eid%type,
+	p_id in Purchases.pid%type,
+	c_id in Purchases.cid%type,
+	pur_qty in Purchases.qty%type,
 	pur_unit_price in Purchases.unit_price%type)
 as
 	reg_price Products.regular_price%type;
@@ -155,11 +170,11 @@ end;
 create or replace trigger check_qty
 before insert on purchases
 for each row
-declare 
+declare
 	qty_avail products.qoh%type;
 	qty_insuf exception;
 begin
-	select qoh 
+	select qoh
 	into qty_avail
 	from products
 	where pid=:new.pid;
@@ -213,4 +228,4 @@ begin
 		where cid = :new.cid;
 	end if;
 end;
-/	
+/
