@@ -1,13 +1,12 @@
 /* Hello world */
 set serveroutput on
+create or replace package body prj2 as
 /* ABBY 1-5 */
 /* Q1 */
 -- create sequence pur#_seq
 -- start with 100001
 -- increment by 1;
---
--- create or replace trigger trig_pur#
--- before insert on purchases
+---- before insert on purchases
 -- for each row
 --
 -- begin
@@ -29,13 +28,11 @@ set serveroutput on
 --
 -- begin
 -- select log#_seq.NEXTVAL
--- into :new.log#
--- from dual;
---
--- end;
-
+-- into :new.
 /* Q2 */
-create or replace procedure show_employees(eid NUMBER) is
+
+/*
+create or replace function show_employees(eid NUMBER) is
 begin
 for ro in (select * from employees)
 loop
@@ -45,7 +42,7 @@ end;
 /
 show errors
 
-create or replace procedure show_customers(cid NUMBER) is
+create or replace function show_customers(cid NUMBER) is
 begin
 for ro in (select * from customers)
 loop
@@ -55,7 +52,7 @@ end;
 /
 show errors
 
-create or replace procedure show_products(pid NUMBER) is
+create or replace function show_products(pid NUMBER) is
 begin
 for ro in (select * from products)
 loop
@@ -65,7 +62,7 @@ end;
 /
 show errors
 
-create or replace procedure show_purchases(pur# NUMBER) is
+create or replace function show_purchases(pur# NUMBER) is
 begin
 for ro in (select * from purchases)
 loop
@@ -75,7 +72,7 @@ end;
 /
 show errors
 
-create or replace procedure show_logs(log# NUMBER) is
+create or replace function show_logs(log# NUMBER) is
 begin
 for ro in (select * from logs)
 loop
@@ -84,6 +81,7 @@ end loop;
 end;
 /
 show errors
+*/
 
 /* Q3 */
 
@@ -185,6 +183,7 @@ exception
 	raise_application_error(-20001,'Insufficient quantity in stock.');
 end;
 /
+
 create or replace trigger upd_qoh
 after insert on purchases
 for each row
@@ -229,3 +228,17 @@ begin
 	end if;
 end;
 /
+
+create or replace package body refcursor1 as
+function show_employees
+return ref_cursor is
+rc ref_cursor;
+begin
+/* Open a ref cursor for a given query */
+open rc for
+select * from employees;
+return rc;
+end;
+end;
+/
+show errors
