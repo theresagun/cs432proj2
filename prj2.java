@@ -50,8 +50,31 @@ public class prj2 {
 				System.out.println(rs.getString(1) + "\t");
 			}
 		}
+		else if(selection == 8){ //add customer
+			//get info to add customer
+			BufferedReader readKeyBoard;
+        		String cid;
+			String name;
+			String phone;
+        		readKeyBoard = new BufferedReader(new InputStreamReader(System.in));
+        		System.out.print("Please Enter CID:");
+        		cid = readKeyBoard.readLine();
+			System.out.print("Please Enter Customer name:");
+        		name = readKeyBoard.readLine();
+			System.out.print("Please Enter Customer phone number:");
+        		phone = readKeyBoard.readLine();
+			//prep to call procedure
+			CallableStatement cs = conn.prepareCall("begin add_customer(:1,:2,:3); end;");
+        		cs.setString(1, cid);
+        		cs.setString(2, name);
+        		cs.setString(3, phone);
+			//execute
+			cs.executeQuery();
+			//no out parameter to handle
+	
+		}
 		else if(selection == 9){ //add purchase
-			//get info to add purchase
+			//get info te add purchase
 			BufferedReader readKeyBoard;
         		String eid;
 			String pid;
