@@ -31,16 +31,16 @@ create or replace package body prj2 as
 -- into :new.
 /* Q2 */
 
-/*
-create or replace function show_employees(eid NUMBER) is
-begin
-for ro in (select * from employees)
-loop
-DBMS_output.put_line(ro.eid || ',' || ro.name || ',' || ro.telephone# || ',' || ro.email);
-end loop;
-end;
-/
-show errors
+
+--create or replace function show_employees(eid NUMBER) is
+--begin
+--for ro in (select * from employees)
+--loop
+--DBMS_output.put_line(ro.eid || ',' || ro.name || ',' || ro.telephone# || ',' || ro.email);
+--end loop;
+--end;
+--/
+--show errors
 
 create or replace function show_customers(cid NUMBER) is
 begin
@@ -161,10 +161,12 @@ begin
 	from products
 	where pid=p_id;
 	insert into Purchases
-	values (8221,e_id,p_id,c_id,sysdate,pur_qty,pur_unit_price,pur_qty*pur_unit_price,(reg_price-pur_unit_price)*pur_qty);
+	values (pur#_seq.nextval,e_id,p_id,c_id,sysdate,pur_qty,pur_unit_price,pur_qty*pur_unit_price,(reg_price-pur_unit_price)*pur_qty);
 	commit;
 end;
 /
+show errors
+
 create or replace trigger check_qty
 before insert on purchases
 for each row

@@ -50,6 +50,36 @@ public class prj2 {
 				System.out.println(rs.getString(1) + "\t");
 			}
 		}
+		else if(selection == 9){ //add purchase
+			//get info to add purchase
+			BufferedReader readKeyBoard;
+        		String eid;
+			String pid;
+			String cid;
+			String qty;
+			String price;
+        		readKeyBoard = new BufferedReader(new InputStreamReader(System.in));
+        		System.out.print("Please Enter EID:");
+        		eid = readKeyBoard.readLine();
+			System.out.print("Please Enter PID:");
+        		pid = readKeyBoard.readLine();
+			System.out.print("Please Enter CID:");
+        		cid = readKeyBoard.readLine();
+			System.out.print("Please Enter quantity:");
+        		qty = readKeyBoard.readLine();
+			System.out.print("Please Enter unit price:");
+        		price = readKeyBoard.readLine();
+			//prep to call procedure
+			CallableStatement cs = conn.prepareCall("begin add_purchase(:1,:2,:3,:4,:5); end;");
+        		cs.setString(1, eid);
+        		cs.setString(2, pid);
+        		cs.setString(3, cid);
+        		cs.setString(4, qty);
+        		cs.setString(5, price);
+			//execute
+			cs.executeQuery();
+			//no out parameter to handle
+		}
                 Scanner sc2 = new Scanner(System.in);
                 System.out.println("Do you want to make another selection? (1 for yes/ 2 for no): ");
                 int again = sc2.nextInt();
