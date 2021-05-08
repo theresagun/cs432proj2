@@ -54,7 +54,7 @@ public class prj2 {
 
 		else if (selection == 6){
 			//Prepare to call stored procedure:
-			CallableStatement cs = conn.prepareCall("begin ? := refcursor6.purchases_made(?) end;");
+			CallableStatement cs = conn.prepareCall("begin ? := refcursor6.purchases_made(?); end;");
 			//register the out parameter (the first parameter)
 			cs.registerOutParameter(1, OracleTypes.CURSOR);
 
@@ -64,9 +64,8 @@ public class prj2 {
 			readKeyBoard = new BufferedReader(new InputStreamReader(System.in));
 			System.out.print("Please enter Customer cid: ");
 			cid = readKeyBoard.readLine();
+			cid = cid.replace("\n", "").replace("\r", "");
 			cs.setString(2, cid);
-
-			System.out.println("ab to execute");
 
 			// execute and retrieve the result set
 			cs.execute();
@@ -79,10 +78,38 @@ public class prj2 {
 					rs.getString(4) +
 					"\t" + rs.getString(5));
 			}
+			cs.close();
 
 
 
 
+
+		}
+
+		else if (selection == 7){
+			CallableStatement cs = conn.prepareCall("begin prj2.number_customers(:1, :2); end;");
+			// Input cid  from keyboard
+			BufferedReader  readKeyBoard;
+			String         pid;
+			readKeyBoard = new BufferedReader(new InputStreamReader(System.in));
+			System.out.print("Please enter Product pid: ");
+			pid = readKeyBoard.readLine();
+			cs.setString(1, pid);
+
+			cs.registerOutParameter(2, Types.INTEGER);
+
+
+			// execute and retrieve the result set
+			cs.executeQuery();
+		//	ResultSet rs = (ResultSet)cs.getObject(1);
+
+			// print the results
+			String num = cs.getString(2);
+			System.out.println(num + " customers");
+			// while (rs.next()) {
+			// 	System.out.println(rs.getString(2));
+			// }
+			cs.close();
 
 		}
 
