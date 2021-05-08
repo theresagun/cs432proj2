@@ -60,7 +60,7 @@ public class prj2 {
 				rs.getString(4) + "\t" + rs.getString(5));
 			}
 		}
-	
+
 		else if(selection == 3) {
                         CallableStatement cs = conn.prepareCall("begin ? := refcursor3.show_products(); end;");
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
@@ -130,31 +130,28 @@ public class prj2 {
 		}
 
 		else if (selection == 7){
-			CallableStatement cs = conn.prepareCall("begin prj2.number_customers(:1, :2); end;");
+			CallableStatement cs = conn.prepareCall("{? = call number_customers(?)}");
 			// Input cid  from keyboard
 			BufferedReader  readKeyBoard;
 			String         pid;
 			readKeyBoard = new BufferedReader(new InputStreamReader(System.in));
 			System.out.print("Please enter Product pid: ");
 			pid = readKeyBoard.readLine();
-			cs.setString(1, pid);
+			cs.setString(2, pid);
 
-			cs.registerOutParameter(2, Types.INTEGER);
+			cs.registerOutParameter(1, Types.NUMERIC);
 
-
+			cs.executeUpdate();
 			// execute and retrieve the result set
 			cs.executeQuery();
-		//	ResultSet rs = (ResultSet)cs.getObject(1);
 
 			// print the results
-			String num = cs.getString(2);
-			System.out.println(num + " customers");
-			// while (rs.next()) {
-			// 	System.out.println(rs.getString(2));
-			// }
+			Integer num = cs.getInt(1);
+			System.out.println(num + " customers have purchased product with pid '" + pid + "'");
 			cs.close();
 
 		}
+
 
 
 
