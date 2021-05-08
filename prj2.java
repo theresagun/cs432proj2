@@ -29,7 +29,7 @@ public class prj2 {
                 System.out.println("2 : Show Customers table."); // Abby
                 System.out.println("3 : Show Products table."); // Abby
                 System.out.println("4 : Show Purchases table."); // Abby
-                System.out.println("5: Show Logs table."); // Abby
+                System.out.println("5 : Show Logs table."); // Abby
 		// Kate (3-5 on doc, 6-8 on here) . Theresa 9
                 System.out.println("6 : call purchases_made(cid) - Given cid, returns name and every purchase the customer has made");
                 System.out.println("7 : call number_customers(pid) - Given pid, report the number of customers who have purchased this product.");
@@ -85,8 +85,11 @@ public class prj2 {
                         CallableStatement cs = conn.prepareCall("begin ? := refcursor5.show_logs(); end;");
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
                         cs.execute();
+			//System.out.println("executing");
                         ResultSet rs = (ResultSet)cs.getObject(1);
+			//System.out.println(rs);
                         while(rs.next()) {
+				//System.out.println("here");
                                 System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
                                 rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
 			}

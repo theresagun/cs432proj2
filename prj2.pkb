@@ -149,22 +149,6 @@ end;
 /
 show errors
 
-
-/*
-create or replace package body refcursor5 as
-function show_logs
-return ref_cursor is
-rc ref_cursor;
-begin
-open rc for
-select * from logs
-return rc;
-end;
-end;
-/
-show errors
-*/
-
 create or replace package body refcursor6 as
 function purchases_made(cust_id in customers.cid%type)
 return ref_cursor is

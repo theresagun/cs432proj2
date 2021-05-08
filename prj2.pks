@@ -32,7 +32,7 @@ show errors
 
 create or replace package refcursor5 as
 type ref_cursor is ref cursor;
-function show_purchases
+function show_logs
 return ref_cursor;
 end;
 /
