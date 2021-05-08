@@ -4,6 +4,15 @@ function show_employees
 return ref_cursor;
 end;
 /
+show errors
+
+create or replace package refcursor6 as
+   type ref_cursor is ref cursor;
+   function purchases_made(cust_id in customers.cid%type)
+   return ref_cursor;
+end;
+/
+show errors
 
 create or replace package prj2 as
 /* should we be returning here */
@@ -25,12 +34,13 @@ type ref_cursor is ref cursor;
 function show_employees2
 return ref_cursor;
 */
-procedure purchases_made
-(cid in Purchases.cid%type, name out Customers.name%type, pid out Purchases.pid%type, pur_date out Purchases.pur_date%type, qty out Purchases.qty%type, unit_price out Purchases.unit_price%type, total out Purchases.total%type);
+-- procedure purchases_made
+-- (cid in Purchases.cid%type, name out Customers.name%type, pid out Purchases.pid%type, pur_date out Purchases.pur_date%type, qty out Purchases.qty%type, unit_price out Purchases.unit_price%type, total out Purchases.total%type);
+
 
 function number_customers
-(pid in Customers.cid%type)
-return integer;
+(p_id in purchases.pid%type)
+return number;
 
 procedure add_customer
 (c_id in Customers.cid%type, c_name in Customers.name%type, c_telephone# in Customers.telephone#%type);

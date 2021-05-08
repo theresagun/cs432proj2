@@ -50,6 +50,45 @@ public class prj2 {
 				System.out.println(rs.getString(1) + "\t");
 			}
 		}
+
+
+		else if (selection == 6){
+			//Prepare to call stored procedure:
+			CallableStatement cs = conn.prepareCall("begin ? := refcursor6.purchases_made(?) end;");
+			//register the out parameter (the first parameter)
+			cs.registerOutParameter(1, OracleTypes.CURSOR);
+
+			// Input cid  from keyboard
+			BufferedReader  readKeyBoard;
+			String         cid;
+			readKeyBoard = new BufferedReader(new InputStreamReader(System.in));
+			System.out.print("Please enter Customer cid: ");
+			cid = readKeyBoard.readLine();
+			cs.setString(2, cid);
+
+			System.out.println("ab to execute");
+
+			// execute and retrieve the result set
+			cs.execute();
+			ResultSet rs = (ResultSet)cs.getObject(1);
+
+			// print the results
+			while (rs.next()) {
+				System.out.println(rs.getString(1) + "\t" +
+					rs.getString(2) + "\t" + rs.getString(3) +
+					rs.getString(4) +
+					"\t" + rs.getString(5));
+			}
+
+
+
+
+
+		}
+
+
+
+
 		else if(selection == 8){ //add customer
 			//get info to add customer
 			BufferedReader readKeyBoard;
@@ -71,7 +110,7 @@ public class prj2 {
 			//execute
 			cs.executeQuery();
 			//no out parameter to handle
-	
+
 		}
 		else if(selection == 9){ //add purchase
 			//get info te add purchase
