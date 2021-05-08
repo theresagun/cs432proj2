@@ -6,6 +6,38 @@ end;
 /
 show errors
 
+create or replace package refcursor2 as
+type ref_cursor is ref cursor;
+function show_customers
+return ref_cursor;
+end;
+/
+show errors
+
+create or replace package refcursor3 as
+type ref_cursor is ref cursor;
+function show_products
+return ref_cursor;
+end;
+/
+show errors
+
+create or replace package refcursor4 as
+type ref_cursor is ref cursor;
+function show_purchases
+return ref_cursor;
+end;
+/
+show errors
+
+create or replace package refcursor5 as
+type ref_cursor is ref cursor;
+function show_purchases
+return ref_cursor;
+end;
+/
+show errors
+
 create or replace package refcursor6 as
    type ref_cursor is ref cursor;
    function purchases_made(cust_id in customers.cid%type)

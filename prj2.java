@@ -47,12 +47,52 @@ public class prj2 {
 			cs.execute();
         		ResultSet rs = (ResultSet)cs.getObject(1);
 			while(rs.next()) {
-				System.out.println(rs.getString(1) + "\t");
+				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" + rs.getString(4));
 			}
 		}
+		else if(selection == 2) {
+			CallableStatement cs = conn.prepareCall("begin ? := refcursor2.show_customers(); end;");
+			cs.registerOutParameter(1, OracleTypes.CURSOR);
+			cs.execute();
+			ResultSet rs = (ResultSet)cs.getObject(1);
+			while(rs.next()) {
+				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
+				rs.getString(4) + "\t" + rs.getString(5));
+			}
+		}
+	
+		else if(selection == 3) {
+                        CallableStatement cs = conn.prepareCall("begin ? := refcursor3.show_products(); end;");
+                        cs.registerOutParameter(1, OracleTypes.CURSOR);
+                        cs.execute();
+                        ResultSet rs = (ResultSet)cs.getObject(1);
+                        while(rs.next()) {
+                                System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
+                                rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
+                        }
+		}
+		else if(selection == 4) {
+                        CallableStatement cs = conn.prepareCall("begin ? := refcursor4.show_purchases(); end;");
+                        cs.registerOutParameter(1, OracleTypes.CURSOR);
+                        cs.execute();
+                        ResultSet rs = (ResultSet)cs.getObject(1);
+                        while(rs.next()) {
+                                System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
+                                rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6) + "\t" + rs.getString(7) + "\t" + rs.getString(8) + "\t" + rs.getString(9));
+                        }
+		}
+		else if(selection == 5) {
+                        CallableStatement cs = conn.prepareCall("begin ? := refcursor5.show_logs(); end;");
+                        cs.registerOutParameter(1, OracleTypes.CURSOR);
+                        cs.execute();
+                        ResultSet rs = (ResultSet)cs.getObject(1);
+                        while(rs.next()) {
+                                System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
+                                rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
+			}
+                }
 
-
-		else if (selection == 6){
+                else if (selection == 6){
 			//Prepare to call stored procedure:
 			CallableStatement cs = conn.prepareCall("begin ? := refcursor6.purchases_made(?); end;");
 			//register the out parameter (the first parameter)
