@@ -184,7 +184,8 @@ public class prj2 {
 			//execute
 			cs.executeQuery();
 			//no out parameter to handle
-
+			cs.close();
+			System.out.println("Successfully added customer "+name);
 		}
 		else if(selection == 9){ //add purchase
 			//get info te add purchase
@@ -212,9 +213,47 @@ public class prj2 {
         		cs.setString(3, cid);
         		cs.setString(4, qty);
         		cs.setString(5, price);
+			//prep output receiving
+			Statement s = conn.createStatement();
+			s.executeUpdate("begin dbms_output.enable(); end;");
 			//execute
-			cs.executeQuery();
-			//no out parameter to handle
+			try{
+				cs.executeQuery();
+			} catch (SQLException e){
+				if(e.getErrorCode() == 20001){
+					//if qoh < quantity of purchase
+					System.out.println("Insufficient quantity in sock.");
+				}
+				else{
+					//different error. probably input wrong id values
+					System.out.println(e.getMessage());
+				}
+				s.executeUpdate("begin dbms_output.disable(); end;");
+		                Scanner sc2 = new Scanner(System.in);
+              			System.out.println("Do you want to make another selection? (1 for yes/ 2 for no): ");
+                		int again = sc2.nextInt();
+                		if(again == 2) {
+                        		x = 0;
+                        		System.out.println("Closing connection");
+                        		conn.close();
+                		}
+				cs.close();
+				continue;
+			}
+			//need to get dbms output
+			CallableStatement call = conn.prepareCall("declare num integer := 2; begin dbms_output.get_lines(?, num); end;");
+			call.registerOutParameter(1, Types.ARRAY, "DBMSOUTPUT_LINESARRAY");
+			call.execute();
+			Array array = null;
+			array = call.getArray(1);
+			if(array != null){ //check if there is output
+				//for each dbms output line, print to java interface
+				Arrays.stream((Object[])array.getArray()).forEach(System.out::println);
+			}
+			//need to disable output until needed again 
+			s.executeUpdate("begin dbms_output.disable(); end;");
+			cs.close();
+			System.out.println("Successfully added purchase.");
 		}
                 Scanner sc2 = new Scanner(System.in);
                 System.out.println("Do you want to make another selection? (1 for yes/ 2 for no): ");
