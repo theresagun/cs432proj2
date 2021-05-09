@@ -46,6 +46,8 @@ public class prj2 {
 			cs.registerOutParameter(1, OracleTypes.CURSOR);
 			cs.execute();
         		ResultSet rs = (ResultSet)cs.getObject(1);
+ 			System.out.println("eid" + "\t" + "name" + "\t" + "telephone#" +    
+                        "\t" + "email");
 			while(rs.next()) {
 				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" + rs.getString(4));
 			}
@@ -55,9 +57,11 @@ public class prj2 {
 			cs.registerOutParameter(1, OracleTypes.CURSOR);
 			cs.execute();
 			ResultSet rs = (ResultSet)cs.getObject(1);
+			System.out.println("cid" +    
+                        "\t" + "name" + "\t" + "telephone#" + "\t" + "visits_made" + "\t" + "last_visit_date");
 			while(rs.next()) {
 				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-				rs.getString(4) + "\t" + rs.getString(5));
+				rs.getString(4) + "\t\t" + rs.getString(5));
 			}
 		}
 
@@ -66,7 +70,9 @@ public class prj2 {
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
                         cs.execute();
                         ResultSet rs = (ResultSet)cs.getObject(1);
-                        while(rs.next()) {
+                        System.out.println("pid" + "\t" + "name" + "\t" + "pur_date" + 
+                        "\t" + "qoh" + "\t" + "qoh_threshold" + "\t" + "regular_price" + "\t" + "discnt_rate");
+			while(rs.next()) {
                                 System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
                                 rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
                         }
@@ -76,10 +82,11 @@ public class prj2 {
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
                         cs.execute();
                         ResultSet rs = (ResultSet)cs.getObject(1);
+			System.out.println("pur#" + "\t" + "eid" + "\t" + "pid" + "\t" + "cid" + "\t" + "pur_date" + "\t"
+			+ "\t\t" + "qty" + "\t" + "unit_price" + "\t" + "total" + "\t\t" + "saving");
                         while(rs.next()) {
                                 System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-                                rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6) + "\t" + rs.getString(7) + "\t" + rs.getString(8) + "\t" + rs.getString(9));
-                        }
+                                rs.getString(4) + "\t" + rs.getString(5) + "\t" + "\t" + rs.getString(6) + "\t" + rs.getString(7) + "\t\t" + rs.getString(8) + "\t\t" + rs.getString(9));        }
 		}
 		else if(selection == 5) {
                         CallableStatement cs = conn.prepareCall("begin ? := refcursor5.show_logs(); end;");
@@ -89,7 +96,7 @@ public class prj2 {
                         ResultSet rs = (ResultSet)cs.getObject(1);
 			//System.out.println(rs);
                         while(rs.next()) {
-				//System.out.println("here");
+				System.out.println("here");
                                 System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
                                 rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
 			}
