@@ -6,6 +6,8 @@ import java.io.*;
 import java.awt.*;
 import oracle.jdbc.pool.OracleDataSource;
 
+//DO WE HAVE TO CALL TRIGGERS/SEQUENCES FILE?
+
 public class prj2 {
         public static void main (String args []) throws SQLException {
         try
@@ -46,7 +48,7 @@ public class prj2 {
 			cs.registerOutParameter(1, OracleTypes.CURSOR);
 			cs.execute();
         		ResultSet rs = (ResultSet)cs.getObject(1);
- 			System.out.println("eid" + "\t" + "name" + "\t" + "telephone#" +    
+ 			System.out.println("eid" + "\t" + "name" + "\t" + "telephone#" +
                         "\t" + "email");
 			while(rs.next()) {
 				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" + rs.getString(4));
@@ -57,7 +59,7 @@ public class prj2 {
 			cs.registerOutParameter(1, OracleTypes.CURSOR);
 			cs.execute();
 			ResultSet rs = (ResultSet)cs.getObject(1);
-			System.out.println("cid" +    
+			System.out.println("cid" +
                         "\t" + "name" + "\t" + "telephone#" + "\t" + "visits_made" + "\t" + "last_visit_date");
 			while(rs.next()) {
 				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
@@ -70,7 +72,7 @@ public class prj2 {
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
                         cs.execute();
                         ResultSet rs = (ResultSet)cs.getObject(1);
-                        System.out.println("pid" + "\t" + "name" + "\t" + "pur_date" + 
+                        System.out.println("pid" + "\t" + "name" + "\t" + "pur_date" +
                         "\t" + "qoh" + "\t" + "qoh_threshold" + "\t" + "regular_price" + "\t" + "discnt_rate");
 			while(rs.next()) {
                                 System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
@@ -102,7 +104,7 @@ public class prj2 {
 			}
                 }
 
-                else if (selection == 6){
+        else if (selection == 6){
 			//Prepare to call stored procedure:
 			CallableStatement cs = conn.prepareCall("begin ? := refcursor6.purchases_made(?); end;");
 			//register the out parameter (the first parameter)
@@ -129,10 +131,6 @@ public class prj2 {
 					"\t" + rs.getString(5));
 			}
 			cs.close();
-
-
-
-
 
 		}
 
@@ -250,7 +248,7 @@ public class prj2 {
 				//for each dbms output line, print to java interface
 				Arrays.stream((Object[])array.getArray()).forEach(System.out::println);
 			}
-			//need to disable output until needed again 
+			//need to disable output until needed again
 			s.executeUpdate("begin dbms_output.disable(); end;");
 			cs.close();
 			System.out.println("Successfully added purchase.");

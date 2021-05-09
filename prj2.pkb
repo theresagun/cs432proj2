@@ -1,3 +1,4 @@
+
 set serveroutput on
 create or replace package body prj2 as
 
@@ -153,18 +154,29 @@ create or replace package body refcursor6 as
 function purchases_made(cust_id in customers.cid%type)
 return ref_cursor is
 rc ref_cursor;
+any_rows_found number;
+invalid_cid exception;
 begin
 /* Open a ref cursor for a given query */
+	select count(*)
+	into   any_rows_found
+	from   customers
+	where  cid = cust_id;
+
+	if any_rows_found = 0 then
+	raise invalid_cid;
+	end if;
+
 	open rc for
 	select pid, pur_date, qty, unit_price, total
 	from purchases where cid = cust_id;
 	---status := true;
 	return rc;
 --
--- exception
--- 		when no_data_found then
--- 		---status := false;
--- 		raise_application_error(-20000, 'CID is invalid. No customers with cid ' || cust_id ||  ' exist');
+ exception
+	 	---status := false;
+		when invalid_cid then
+ 		raise_application_error(-20000, 'CID is invalid. No customers with cid ' || cust_id ||  ' exist');
 end;
 end;
 /
