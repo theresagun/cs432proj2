@@ -37,7 +37,7 @@ public class prj2 {
                 System.out.println("7 : call number_customers(pid) - Given pid, report the number of customers who have purchased this product.");
                 System.out.println("8 : add_customer(cid, name, telephone#) - Given cid, name, telephone#, add new customer to Customers table.");
                 System.out.println("9 : add_purchase(eid, pid, cid, qty, unit_price) - Given eid, pid, cid, qty, and unit price, add new purchase to Purchases table");
-                System.out.println("12 : Quit");
+                System.out.println("10 : Quit");
                 Scanner sc1 = new Scanner(System.in);
                 System.out.println("Enter your selection (1-12): ");
                 int selection = sc1.nextInt();
@@ -72,13 +72,13 @@ public class prj2 {
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
                         cs.execute();
                         ResultSet rs = (ResultSet)cs.getObject(1);
-                        System.out.println("pid" + "\t" + "name" + "\t" + "pur_date" +
-                        "\t" + "qoh" + "\t" + "qoh_threshold" + "\t" + "regular_price" + "\t" + "discnt_rate");
+                        //System.out.println("pid" + "\t" + "name" + "\t" +
+                        //"\t" + "qoh" + "\t" + "qoh_threshold" + "\t" + "regular_price" + "\t" + "discnt_rate");
 			while(rs.next()) {
-                                System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-                                rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
-                        }
+				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" + rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
+			}
 		}
+
 		else if(selection == 4) {
                         CallableStatement cs = conn.prepareCall("begin ? := refcursor4.show_purchases(); end;");
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
@@ -96,11 +96,12 @@ public class prj2 {
                         cs.execute();
 			//System.out.println("executing");
                         ResultSet rs = (ResultSet)cs.getObject(1);
-			//System.out.println(rs);
+			System.out.println("log#" + "\t" + "user_name" + "\t" + "operation" + "\t" + "op_time" +
+			"\t" + "\t" + "table_name" + "\t" + "tuple_pkey");
                         while(rs.next()) {
-				System.out.println("here");
+				//System.out.println("here");
                                 System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-                                rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
+                                 "\t" + rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
 			}
                 }
 
@@ -124,11 +125,13 @@ public class prj2 {
 			ResultSet rs = (ResultSet)cs.getObject(1);
 
 			// print the results
+			System.out.println("pid" + "\t" + "pur_date" + "\t\t" + "qty" + "\t" + "unit_price" + "\t" + "total");
 			while (rs.next()) {
+				//System.out.println(" the qty is" + rs.getString(3));
 				System.out.println(rs.getString(1) + "\t" +
 					rs.getString(2) + "\t" + rs.getString(3) +
-					rs.getString(4) +
-					"\t" + rs.getString(5));
+					"\t" + rs.getString(4) +
+					"\t\t" + rs.getString(5));
 			}
 			cs.close();
 
@@ -156,11 +159,6 @@ public class prj2 {
 			cs.close();
 
 		}
-
-
-
-
-
 		else if(selection == 8){ //add customer
 			//get info to add customer
 			BufferedReader readKeyBoard;
@@ -184,6 +182,10 @@ public class prj2 {
 			//no out parameter to handle
 			cs.close();
 			System.out.println("Successfully added customer "+name);
+		}
+		else if(selection == 10) { // quit
+			System.out.println("Closing connection");
+			conn.close();
 		}
 		else if(selection == 9){ //add purchase
 			//get info te add purchase
