@@ -120,8 +120,37 @@ public class prj2 {
 			cid = cid.replace("\n", "").replace("\r", "");
 			cs.setString(2, cid);
 
+
+			Statement s = conn.createStatement();
+			s.executeUpdate("begin dbms_output.enable(); end;");
 			// execute and retrieve the result set
-			cs.execute();
+
+			try{
+				cs.executeQuery();
+			} catch (SQLException e){
+				if(e.getErrorCode() == 20000){
+					//if qoh < quantity of purchase
+					System.out.println("'CID is invalid. No customers with cid '" + cid +  " ' exist'");
+				}
+				else{
+					System.out.println(e.getMessage());
+				}
+				s.executeUpdate("begin dbms_output.disable(); end;");
+		                Scanner sc2 = new Scanner(System.in);
+              			System.out.println("Do you want to make another selection? (1 for yes/ 2 for no): ");
+                		int again = sc2.nextInt();
+                		if(again == 2) {
+                        		x = 0;
+                        		System.out.println("Closing connection");
+                        		conn.close();
+                		}
+				cs.close();
+				continue;
+			}
+
+
+
+			//cs.execute();
 			ResultSet rs = (ResultSet)cs.getObject(1);
 
 			// print the results
@@ -149,9 +178,36 @@ public class prj2 {
 
 			cs.registerOutParameter(1, Types.NUMERIC);
 
-			cs.executeUpdate();
+			//cs.executeUpdate();
 			// execute and retrieve the result set
-			cs.executeQuery();
+
+
+			Statement s = conn.createStatement();
+			s.executeUpdate("begin dbms_output.enable(); end;");
+			// execute and retrieve the result set
+
+			try{
+				cs.executeQuery();
+			} catch (SQLException e){
+				if(e.getErrorCode() == 20000){
+					//if qoh < quantity of purchase
+					System.out.println("'PID is invalid. No product with pid '" + pid + "' exist");
+				}
+				else{
+					System.out.println(e.getMessage());
+				}
+				s.executeUpdate("begin dbms_output.disable(); end;");
+		                Scanner sc2 = new Scanner(System.in);
+              			System.out.println("Do you want to make another selection? (1 for yes/ 2 for no): ");
+                		int again = sc2.nextInt();
+                		if(again == 2) {
+                        		x = 0;
+                        		System.out.println("Closing connection");
+                        		conn.close();
+                		}
+				cs.close();
+				continue;
+			}
 
 			// print the results
 			Integer num = cs.getInt(1);
