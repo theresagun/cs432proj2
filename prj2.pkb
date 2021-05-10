@@ -36,8 +36,10 @@ create or replace package body prj2 as
 	                select count(*) into same_pid
 	                from purchases, customers where purchases.pid = p_id
 	                and purchases.cid = customers.cid;
+					--check if pid is valid
 					select count(*) into num_products_with_pid from products where pid = p_id;
 					if num_products_with_pid = 0 then
+						--no products with pid 'pid' so raise exception
 						raise invalid_pid;
 					end if;
 	                return (same_pid);
@@ -62,22 +64,22 @@ create or replace package body prj2 as
 
 
 	/*question 6*/
-	procedure add_purchase( --need the following parameters to do this procedure
+	procedure add_purchase(
 		e_id in Purchases.eid%type,
 		p_id in Purchases.pid%type,
 		c_id in Purchases.cid%type,
 		pur_qty in Purchases.qty%type,
 		pur_unit_price in Purchases.unit_price%type)
 	as
-		reg_price Products.regular_price%type; --will need to refer to the regular price so declare it here
+		reg_price Products.regular_price%type;
 	begin
 		select regular_price
 		into reg_price
 		from products
-		where pid=p_id; --the previous sql statement saves the regular price of a product into reg_price
+		where pid=p_id;
 		insert into Purchases
 		values (pur#_seq.nextval,e_id,p_id,c_id,sysdate,pur_qty,pur_unit_price,pur_qty*pur_unit_price,(reg_price-pur_unit_price)*pur_qty);
-		commit; --the previous sql statement inserts this new purchase into the purchases table
+		commit;
 	end;
 
 end;  --end of package?
@@ -150,6 +152,8 @@ end;
 /
 show errors
 
+
+--package for purchases_made
 create or replace package body refcursor6 as
 function purchases_made(cust_id in customers.cid%type)
 return ref_cursor is
@@ -158,12 +162,14 @@ any_rows_found number;
 invalid_cid exception;
 begin
 /* Open a ref cursor for a given query */
+	-- check if cid is valid
 	select count(*)
 	into   any_rows_found
 	from   customers
 	where  cid = cust_id;
 
 	if any_rows_found = 0 then
+	--no customer with cid 'cust-id' so raise exception
 	raise invalid_cid;
 	end if;
 

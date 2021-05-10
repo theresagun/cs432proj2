@@ -3,6 +3,7 @@ ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH24:MI:SS ';
 
 -- all triggers put an entry into the logs table
 
+/*Q7*/
 ---trigger for when a tuple is inserted into Customers table
 create or replace trigger new_customer
  after insert on Customers
@@ -55,6 +56,7 @@ create or replace trigger update_qoh
  /
  show errors
 
+/* end Q7 */
 
 
  create or replace trigger trig_pur#
@@ -130,7 +132,7 @@ begin
 		dbms_output.put_line('The current qoh of the product is below the required threshold and new supply is required.'); --if it is below the threshold then we need to increase the qoh
 		update products
 		set qoh = qty_thresh + 10
-		where pid = :new.pid; --the previous sql statement updates the qoh for this product to be the threshold + 10 
+		where pid = :new.pid; --the previous sql statement updates the qoh for this product to be the threshold + 10
 		dbms_output.put_line('After getting new supply, the qoh of the product is now ' || (qty_thresh + 10));
 	end if;
 end;
@@ -142,12 +144,12 @@ create or replace trigger upd_cust
 after insert on purchases
 for each row
 declare
-	lvd customers.last_visit_date%type; 
+	lvd customers.last_visit_date%type;
 begin
 	select last_visit_date
 	into lvd
 	from customers
-	where cid = :new.cid; -- save the customers last visit date 
+	where cid = :new.cid; -- save the customers last visit date
 	if(to_char(:new.pur_date, 'MM/DD/YYYY') != to_char(lvd, 'MM/DD/YYYY')) then -- if the customer did not already make a purchase on this date then
 		update customers
 		set last_visit_date = :new.pur_date, visits_made = visits_made + 1
