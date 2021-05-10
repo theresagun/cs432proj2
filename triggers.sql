@@ -86,27 +86,28 @@ show errors
 
 
 --theresas for #6
+--trigger for checking the qoh of a product before inserting a purchase into the table
 create or replace trigger check_qty
 before insert on purchases
 for each row
 declare
 	qty_avail products.qoh%type;
-	qty_insuf exception;
+	qty_insuf exception; --user defined exception for when there is not enough qoh
 begin
 	select qoh
 	into qty_avail
 	from products
-	where pid=:new.pid;
-	if(qty_avail<:new.qty) then raise qty_insuf;
-	end if;
+	where pid=:new.pid; -- the previous sql statement saves the qoh so we can compare it to the requested quantity next
+	if(qty_avail<:new.qty) then raise qty_insuf; -- check if we have enough qoh, if not then we raise a user defined exception
+	end if; -- if we do have enough then the trigger is completed and the insertion on the purchases table occurs
 exception
 	when qty_insuf then
-	raise_application_error(-20001,'Insufficient quantity in stock.');
+	raise_application_error(-20001,'Insufficient quantity in stock.'); -- raise user defined exception so that the insert on purchases doesnt occur
 end;
 /
 show errors
 
-
+--trigger for updating the qoh to reflect it after a purchase was made
 create or replace trigger upd_qoh
 after insert on purchases
 for each row
@@ -117,40 +118,40 @@ begin
 	select qoh
 	into qtyoh
 	from products
-	where pid=:new.pid;
+	where pid=:new.pid; -- the previous sql statement saves the current qoh of the product
 	select qoh_threshold
 	into qty_thresh
 	from products
-	where pid=:new.pid;
+	where pid=:new.pid; -- the previous sql statement saves the threshold for this product
 	update products
 	set qoh = qtyoh-:new.qty
-	where pid = :new.pid;
-	if((qtyoh-:new.qty)<qty_thresh) then
-		dbms_output.put_line('The current qoh of the product is below the required threshold and new supply is required.');
+	where pid = :new.pid; -- the previous sql statement updates the products table to show the qoh after the purchase was made (what remains)
+	if((qtyoh-:new.qty)<qty_thresh) then --check if the updated quantity is below the threshold that we previously saved
+		dbms_output.put_line('The current qoh of the product is below the required threshold and new supply is required.'); --if it is below the threshold then we need to increase the qoh
 		update products
 		set qoh = qty_thresh + 10
-		where pid = :new.pid;
+		where pid = :new.pid; --the previous sql statement updates the qoh for this product to be the threshold + 10 
 		dbms_output.put_line('After getting new supply, the qoh of the product is now ' || (qty_thresh + 10));
 	end if;
 end;
 /
 show errors
 
-
+--trigger for updating the customers info after a purchase is made
 create or replace trigger upd_cust
 after insert on purchases
 for each row
 declare
-	lvd customers.last_visit_date%type;
+	lvd customers.last_visit_date%type; 
 begin
 	select last_visit_date
 	into lvd
 	from customers
-	where cid = :new.cid;
-	if(to_char(:new.pur_date, 'MM/DD/YYYY') != to_char(lvd, 'MM/DD/YYYY')) then
+	where cid = :new.cid; -- save the customers last visit date 
+	if(to_char(:new.pur_date, 'MM/DD/YYYY') != to_char(lvd, 'MM/DD/YYYY')) then -- if the customer did not already make a purchase on this date then
 		update customers
 		set last_visit_date = :new.pur_date, visits_made = visits_made + 1
-		where cid = :new.cid;
+		where cid = :new.cid; -- updates the customers table to show the last_visit_date is today and increment the visits_made
 	end if;
 
 end;

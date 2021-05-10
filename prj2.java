@@ -216,7 +216,7 @@ public class prj2 {
 
 		}
 		else if(selection == 8){ //add customer
-			//get info to add customer
+			//get info to add customer via user input
 			BufferedReader readKeyBoard;
         		String cid;
 			String name;
@@ -235,7 +235,7 @@ public class prj2 {
         		cs.setString(3, phone);
 			//execute
 			cs.executeQuery();
-			//no out parameter to handle
+			//no out parameter to handle so close the callable statement
 			cs.close();
 			System.out.println("Successfully added customer "+name);
 		}
@@ -244,7 +244,7 @@ public class prj2 {
 			conn.close();
 		}
 		else if(selection == 9){ //add purchase
-			//get info te add purchase
+			//get info to add a purchase via user input
 			BufferedReader readKeyBoard;
         		String eid;
 			String pid;
@@ -269,22 +269,26 @@ public class prj2 {
         		cs.setString(3, cid);
         		cs.setString(4, qty);
         		cs.setString(5, price);
-			//prep output receiving
+			//prep output receiving so we can see the dbms output
 			Statement s = conn.createStatement();
 			s.executeUpdate("begin dbms_output.enable(); end;");
 			//execute
 			try{
 				cs.executeQuery();
 			} catch (SQLException e){
+				//if there are a sql exception...
 				if(e.getErrorCode() == 20001){
-					//if qoh < quantity of purchase
+					//user defined exception for when qoh < quantity of purchase
 					System.out.println("Insufficient quantity in sock.");
 				}
 				else{
 					//different error. probably input wrong id values
-					System.out.println(e.getMessage());
+					System.out.println("Invalid input parameters.");
 				}
+				//continue the program...
+				//disable the output so we no longer receive it
 				s.executeUpdate("begin dbms_output.disable(); end;");
+				//does the user want to continue?
 		                Scanner sc2 = new Scanner(System.in);
               			System.out.println("Do you want to make another selection? (1 for yes/ 2 for no): ");
                 		int again = sc2.nextInt();
@@ -305,7 +309,7 @@ public class prj2 {
 			if(array != null){ //check if there is output
 				//for each dbms output line, print to java interface
 				Arrays.stream((Object[])array.getArray()).forEach(System.out::println);
-			}
+			}//if there is no ouput then do nothing with array
 			//need to disable output until needed again
 			s.executeUpdate("begin dbms_output.disable(); end;");
 			cs.close();

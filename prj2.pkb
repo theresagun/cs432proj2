@@ -62,22 +62,22 @@ create or replace package body prj2 as
 
 
 	/*question 6*/
-	procedure add_purchase(
+	procedure add_purchase( --need the following parameters to do this procedure
 		e_id in Purchases.eid%type,
 		p_id in Purchases.pid%type,
 		c_id in Purchases.cid%type,
 		pur_qty in Purchases.qty%type,
 		pur_unit_price in Purchases.unit_price%type)
 	as
-		reg_price Products.regular_price%type;
+		reg_price Products.regular_price%type; --will need to refer to the regular price so declare it here
 	begin
 		select regular_price
 		into reg_price
 		from products
-		where pid=p_id;
+		where pid=p_id; --the previous sql statement saves the regular price of a product into reg_price
 		insert into Purchases
 		values (pur#_seq.nextval,e_id,p_id,c_id,sysdate,pur_qty,pur_unit_price,pur_qty*pur_unit_price,(reg_price-pur_unit_price)*pur_qty);
-		commit;
+		commit; --the previous sql statement inserts this new purchase into the purchases table
 	end;
 
 end;  --end of package?
