@@ -72,11 +72,17 @@ public class prj2 {
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
                         cs.execute();
                         ResultSet rs = (ResultSet)cs.getObject(1);
-                        //System.out.println("pid" + "\t" + "name" + "\t" +
-                        //"\t" + "qoh" + "\t" + "qoh_threshold" + "\t" + "regular_price" + "\t" + "discnt_rate");
+                        System.out.println("pid" + "\t\t" + "name" + "\t\t" +
+                        "qoh" + "\t\t" + "qoh_threshold" + "\t\t" + "regular_price" + "\t\t" + "discnt_rate");
+			int line_num = 0;
 			while(rs.next()) {
-				System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" + rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6));
-			}
+				if(line_num < 7) {
+				System.out.println(rs.getString(1) + "\t\t" +  rs.getString(2) + "\t\t" + rs.getString(3) + "\t\t" + rs.getString(4) + "\t\t\t" + rs.getString(5) +"\t\t\t" + rs.getString(6));
+				}	
+					else {
+			//	System.out.println("here");
+				System.out.println(rs.getString(1) + "\t\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t\t" + rs.getString(4) + "\t\t\t" + rs.getString(5) + "\t\t\t" + rs.getString(6));	}			line_num = line_num + 1;
+		}
 		}
 
 		else if(selection == 4) {
