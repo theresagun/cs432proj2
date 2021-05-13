@@ -77,14 +77,10 @@ public class prj2 {
 			int line_num = 0;
 			while(rs.next()) {
 				if(line_num < 7) {
-				System.out.println(rs.getString(1) + "\t\t" +  rs.getString(2) + "\t\t" + rs.getString(3) + "\t\t" + rs.getString(4) + "\t\t\t" + rs.getString(5) +"\t\t\t" + rs.getString(6));
-				}	
+				System.out.println(rs.getString(1) + "\t\t" +  rs.getString(2) + "\t\t" + rs.getString(3) + "\t\t" + rs.getString(4) + "\t\t\t" + rs.getString(5) +"\t\t\t\t" + rs.getString(6));	}	
 					else {
 			//	System.out.println("here");
-				System.out.println(rs.getString(1) + "\t\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t\t" + rs.getString(4) + "\t\t\t" + rs.getString(5) + "\t\t\t" + rs.getString(6));	}			line_num = line_num + 1;
-		}
-		}
-
+				System.out.println(rs.getString(1) + "\t\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t\t" + rs.getString(4) + "\t\t\t" + rs.getString(5) + "\t\t\t\t" + rs.getString(6));	}			line_num = line_num + 1;	}}
 		else if(selection == 4) {
                         CallableStatement cs = conn.prepareCall("begin ? := refcursor4.show_purchases(); end;");
                         cs.registerOutParameter(1, OracleTypes.CURSOR);
